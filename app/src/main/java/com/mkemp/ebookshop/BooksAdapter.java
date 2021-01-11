@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHolder>
@@ -44,10 +45,14 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
         return books.size();
     }
     
-    public void setBooks(ArrayList<Book> books)
+    public void setBooks(ArrayList<Book> newBooks)
     {
-        this.books = books;
-        notifyDataSetChanged();
+        final DiffUtil.DiffResult result = DiffUtil.calculateDiff(
+                new BooksDiffCallback(books, newBooks),
+                false
+        );
+        books = newBooks;
+        result.dispatchUpdatesTo(BooksAdapter.this);
     }
     
     class BookViewHolder extends RecyclerView.ViewHolder

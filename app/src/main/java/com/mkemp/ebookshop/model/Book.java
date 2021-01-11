@@ -1,5 +1,7 @@
 package com.mkemp.ebookshop.model;
 
+import java.util.Objects;
+
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 import androidx.databinding.library.baseAdapters.BR;
@@ -94,5 +96,23 @@ public class Book extends BaseObservable
     {
         this.categoryId = categoryId;
         notifyPropertyChanged(BR.categoryId);
+    }
+    
+    @Override
+    public boolean equals(Object o)
+    {
+        if ( this == o ) { return true; }
+        if ( ! (o instanceof Book) ) { return false; }
+        Book book = (Book) o;
+        return getBookId() == book.getBookId() &&
+                getCategoryId() == book.getCategoryId() &&
+                getBookName().equals(book.getBookName()) &&
+                getUnitPrice().equals(book.getUnitPrice());
+    }
+    
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(getBookId(), getBookName(), getUnitPrice(), getCategoryId());
     }
 }
