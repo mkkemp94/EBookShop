@@ -4,6 +4,8 @@ import android.app.Application;
 import android.os.AsyncTask;
 
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import androidx.lifecycle.LiveData;
 
@@ -23,9 +25,17 @@ public class BookRepository
         return bookDao.getBooks(categoryId);
     }
     
-    public void insertBook(Book book)
+    public void insertBook(final Book book)
     {
-        new BookRepository.InsertBookAsyncTask(bookDao).execute(book);
+//        new BookRepository.InsertBookAsyncTask(bookDao).execute(book);
+        Executor executor = Executors.newSingleThreadExecutor();
+        executor.execute(new Runnable() {
+            @Override
+            public void run()
+            {
+                bookDao.insert(book);
+            }
+        });
     }
     
     public void deleteBook(Book book)

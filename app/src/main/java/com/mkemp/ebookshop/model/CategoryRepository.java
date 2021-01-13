@@ -4,6 +4,8 @@ import android.app.Application;
 import android.os.AsyncTask;
 
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import androidx.lifecycle.LiveData;
 
@@ -23,9 +25,17 @@ public class CategoryRepository
         return categoryDao.getAllCategories();
     }
     
-    public void insertCategory(Category category)
+    public void insertCategory(final Category category)
     {
-        new InsertCategoryAsyncTask(categoryDao).execute(category);
+//        new InsertCategoryAsyncTask(categoryDao).execute(category);
+        Executor executor = Executors.newSingleThreadExecutor();
+        executor.execute(new Runnable() {
+            @Override
+            public void run()
+            {
+                categoryDao.insert(category);
+            }
+        });
     }
     
     public void deleteCategory(Category category)
